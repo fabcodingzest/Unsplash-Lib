@@ -14,7 +14,6 @@ function Feed({ photos }) {
           <Image
             height={500}
             width={500}
-            placeholder="blur"
             objectFit="cover"
             src={urls.small} // Add fallback image or some check for render
             alt={alt_description}
