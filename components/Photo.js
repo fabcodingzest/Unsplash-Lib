@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import React, { useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -14,7 +13,6 @@ function Photo({ data, width, height }) {
     setIsLiked(!isLiked);
   };
   return (
-    <Link href={`/detail/${id}`} style={{ cursor: "pointer" }}>
       <Box position="relative">
         <a style={{ position: "relative" }}>
           <Image
@@ -35,7 +33,6 @@ function Photo({ data, width, height }) {
           {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </Box>
       </Box>
-    </Link>
   );
 }
 
