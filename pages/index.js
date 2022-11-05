@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { Container } from "@mui/material";
-import Feed from "./components/Feed";
+import Feed from "../components/Feed";
 import throttle from "lodash.throttle";
 
 // Refactor
