@@ -13,26 +13,24 @@ function Photo({ data, width, height }) {
     setIsLiked(!isLiked);
   };
   return (
-      <Box position="relative">
-        <a style={{ position: "relative" }}>
-          <Image
-            height={width}
-            width={height}
-            objectFit="cover"
-            placeholder="blur"
-            blurDataURL={data.blur_hash}
-            priority={true}
-            src={urls.small}
-            alt={alt_description}
-          />
-        </a>
-        <Box
-          onClick={handleLikes}
-          component="span"
-          sx={{ position: "absolute", right: 4, bottom: 4, cursor: "pointer" }}>
-          {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        </Box>
+    <Box position="relative">
+      <a style={{ position: "relative" }}>
+        <Image
+          height={width}
+          width={height}
+          objectFit="cover"
+          priority={true}
+          src={urls.small}
+          alt={alt_description}
+        />
+      </a>
+      <Box
+        onClick={handleLikes}
+        component="span"
+        sx={{ position: "absolute", right: 4, bottom: 4, cursor: "pointer" }}>
+        {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       </Box>
+    </Box>
   );
 }
 
