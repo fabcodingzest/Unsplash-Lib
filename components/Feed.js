@@ -1,21 +1,30 @@
 import { Grid } from "@mui/material";
-import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import Photo from "./Photo";
 
-function Feed({ photos }) {
+const FeedItem = ({ data }) => {
+  const { id } = data;
+  return (
+    <Grid item xs={4}>
+      <Link href={`/detail/${id}`} style={{ cursor: "pointer" }}>
+        <Photo data={data} width={200} height={200} />
+      </Link>
+    </Grid>
+  );
+};
+
+const Feed = ({ photos }) => {
   return (
     <Grid
       container
-      rowSpacing={{ xs: 1, sm: 2, md: 4 }}
-      columnSpacing={{ xs: 1.4, sm: 2.4, md: 4.4 }}>
+      rowSpacing={{ xs: 0, sm: 1 }}
+      columnSpacing={{ xs: 0.8, sm: 1.6 }}>
       {photos.map((data) => (
-        <Grid item xs={4} key={data.id}>
-          <Photo data={data} width={200} height={200} />
-        </Grid>
+        <FeedItem key={data.id} data={data} />
       ))}
     </Grid>
   );
-}
+};
 
 export default Feed;
