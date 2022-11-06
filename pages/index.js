@@ -65,14 +65,14 @@ const Home = ({ initialPhotos }) => {
   }, []);
 
   return (
-    <Container maxWidth="sm">
+    <>
       <Head>
         <title>Swanky Feed</title>
         <meta name="description" content="Swanky Feed" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Feed photos={photos} />
-    </Container>
+    </>
   );
 };
 
