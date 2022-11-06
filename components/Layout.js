@@ -7,8 +7,7 @@ export default function Layout({ children }) {
     <Box m={0}>
       <Container maxWidth="sm">
         <Stack
-          px={3}
-          py={4}
+          py={{ xs: 2, md: 4 }}
           direction="row"
           justifyContent="space-between"
           alignItems="center">
@@ -17,7 +16,7 @@ export default function Layout({ children }) {
               level="display2"
               component="h1"
               fontWeight="bold"
-              fontSize="xl">
+              sx={{ fontSize: { xs: "1.2rem", sm: "2rem" } }}>
               Swanky
             </Typography>
           </Link>
