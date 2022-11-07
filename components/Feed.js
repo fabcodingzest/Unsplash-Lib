@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import Link from "next/link";
 import React from "react";
-import Photo from "./Photo";
+import Photo from "./FeedImage";
 
 const FeedItem = ({ data }) => {
   const { id } = data;

@@ -4,7 +4,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Box } from "@mui/system";
 
-function Photo({ data, width, height }) {
+const FeedImage = ({ data, width, height }) => {
   const { urls, alt_description, id, liked_by_user } = data;
   const [isLiked, setIsLiked] = useState(liked_by_user);
   const handleLikes = (e) => {
@@ -30,6 +30,6 @@ function Photo({ data, width, height }) {
       </Box>
     </Box>
   );
-}
+};
 
-export default Photo;
+export default FeedImage;
