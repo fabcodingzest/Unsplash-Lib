@@ -1,6 +1,6 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
-import Search from "./Search";
+import Search from "./SearchBar";
 import { indigo } from "@mui/material/colors";
 
 export default function Layout({ children }) {
