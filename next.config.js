@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     domains: ["images.unsplash.com"],
   },
+  largePageDataBytes: 200 * 100000,
 };
 
 module.exports = nextConfig;
