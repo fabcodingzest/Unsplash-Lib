@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Container } from "@mui/material";
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import { Box, Container } from "@mui/material";
+import {
+  dehydrate,
+  QueryClient,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 import {
   fetchCollectionImages,
   fetchImageDetails,
@@ -9,28 +14,81 @@ import {
 import Loader from "../../components/Loader";
 import Error from "../../components/Error";
 import DetailImage from "../../components/DetailImage";
-import { getRelatedCollectionData } from "../../utilities/helper";
+import {
+  getNextPageNum,
+  getRelatedCollectionData,
+} from "../../utilities/helper";
+import { useInView } from "react-intersection-observer";
 
 const Detail = () => {
+  const { ref, inView } = useInView();
   const { id } = useRouter().query;
-  const { data, status, error, isLoading } = useQuery({
+  const {
+    data: detailData,
+    status: detailStatus,
+    error: detailError,
+    isLoading: detailIsLoading,
+  } = useQuery({
     queryKey: ["detail", id],
     queryFn: () => fetchImageDetails(id),
     refetchOnWindowFocus: false,
   });
 
-  console.log(isLoading);
-  if (isLoading) {
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
+
+  const { haveRelatedCollections, firstCollectionId } =
+    getRelatedCollectionData(detailData);
+
+  const {
+    data: collectionData,
+    error: collectionError,
+    isLoading: collectionIsLoading,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["collection", firstCollectionId],
+    queryFn: ({ pageParam = 1 }) =>
+      fetchCollectionImages(pageParam, firstCollectionId),
+    getNextPageParam: getNextPageNum,
+    enabled: !!haveRelatedCollections,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+  });
+  console.log(collectionData);
+  console.log(detailIsLoading || collectionIsLoading);
+  if (detailIsLoading) {
     return <Loader />;
   }
 
-  if (status === "error" || error) {
-    return <Error error={error} />;
+  if (collectionError || detailError) {
+    return <Error error={detailError || collectionError} />;
   }
 
   return (
     <Container maxWidth="sm" sx={{ minHeight: "100vh" }}>
-      {status === "success" && <DetailImage data={data} />}
+      <DetailImage data={detailData} />
+      {collectionData.pages.map((page) => {
+        return page.data
+          .filter((img) => {
+            const firstImgId = page.data[0].id;
+            const sameCollection = firstImgId === img.id;
+            return !sameCollection;
+          })
+          .map((img) => {
+            return <DetailImage data={img} key={img.id} />;
+          });
+      })}
+      <Box ref={ref} pb={8}>
+        {(isFetching || isFetchingNextPage) && <Loader />}
+      </Box>
     </Container>
   );
 };
@@ -50,16 +108,17 @@ export async function getStaticProps(context) {
     queryKey: ["detail", id],
     queryFn: () => fetchImageDetails(id),
   });
-
   const { haveRelatedCollections, firstCollectionId } =
     getRelatedCollectionData(imageDetails);
 
   if (haveRelatedCollections) {
     await queryClient.prefetchInfiniteQuery({
       queryKey: ["collection", firstCollectionId],
-      queryFn: fetchCollectionImages,
+      queryFn: ({ pageParam }) =>
+        fetchCollectionImages(pageParam, firstCollectionId),
     });
   }
+
   return {
     props: {
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
