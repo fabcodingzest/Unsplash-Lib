@@ -9,7 +9,12 @@ import React from "react";
 import Layout from "../components/Layout";
 
 function MyApp({ Component, pageProps }) {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { queries: { staleTime: 5 * 60 * 60 } },
+      })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
