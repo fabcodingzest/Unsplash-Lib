@@ -16,7 +16,11 @@ const FeedImage = ({ data, width, height }) => {
         src={urls.small}
         alt={alt_description}
       />
-      <Like id={id} likedByUser={liked_by_user} />
+      <Like
+        id={id}
+        likedByUser={liked_by_user}
+        position={{ right: 4, bottom: 4 }}
+      />
     </Box>
   );
 };
