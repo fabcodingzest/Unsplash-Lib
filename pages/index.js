@@ -1,14 +1,13 @@
 import React from "react";
 import { useInView } from "react-intersection-observer";
-
 import {
   useInfiniteQuery,
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
 import Feed from "../components/Feed";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import { fetchCollectionImages } from "../utilities/apiFuctions";
+import { Box } from "@mui/material";
+import { collectionId, fetchCollectionImages } from "../utilities/apiFuctions";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import { getNextPageNum } from "../utilities/helper";
@@ -26,7 +25,7 @@ export default function Home() {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: ["collection"],
+    queryKey: ["collection", collectionId],
     queryFn: fetchCollectionImages,
     getNextPageParam: getNextPageNum,
     refetchOnMount: false,
@@ -68,7 +67,7 @@ export async function getServerSideProps() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["collection"],
+    queryKey: ["collection", collectionId],
     queryFn: fetchCollectionImages,
   });
 
