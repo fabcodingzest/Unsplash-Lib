@@ -1,86 +1,85 @@
-import { useEffect, useState } from "react";
-import Head from "next/head";
-import { Container } from "@mui/material";
+import React from "react";
+import { useInView } from "react-intersection-observer";
+
+import {
+  useInfiniteQuery,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import Feed from "../components/Feed";
-import throttle from "lodash.throttle";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { fetchCollectionImages, getNextPageNum } from "../utilities/helpers";
+import Loader from "../components/Loader";
+import Error from "../components/Error";
 
-// Refactor
-const fetchImages = async (page) => {
-  const url = `${process.env.NEXT_PUBLIC_UNSPLASH_URL}/collections/${process.env.NEXT_PUBLIC_UNSPLASH_COLLECTION_ID}/photos/?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_CLIENT_ID}&page=${page}&per_page=13`;
-  const response = await fetch(url);
-  return response.json();
-};
+export default function Home() {
+  const { ref, inView } = useInView();
 
-const Home = ({ initialPhotos }) => {
-  const [loading, setLoading] = useState(false);
-  const [photos, setPhotos] = useState(initialPhotos);
-  const [page, setPage] = useState(1);
-  const [canFetch, setCanFetch] = useState(true);
+  const {
+    data,
+    status,
+    isLoading,
+    error,
+    isFetching,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["collection"],
+    queryFn: fetchCollectionImages,
+    getNextPageParam: getNextPageNum,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+  });
 
-  useEffect(() => {
-    updateImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  const updateImages = async () => {
-    setLoading(true);
-    try {
-      if (canFetch && page > 1) {
-        const data = await fetchImages(page);
-        if (data.length === 0) {
-          setCanFetch(false);
-          return;
-        } else if (data.length > 0) {
-          setCanFetch(true);
-        }
-        setPhotos((oldData) => {
-          return [...oldData, ...data];
-        });
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
+  React.useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
     }
-  };
-
-  const handleScroll = () => {
-    if (
-      !loading &&
-      window.innerHeight + window.scrollY >= document.body.scrollHeight - 17
-    ) {
-      setPage((oldPage) => {
-        return oldPage + 1;
-      });
-    }
-  };
-
-  useEffect(() => {
-    const event = window.addEventListener(
-      "scroll",
-      throttle(handleScroll, 500)
-    );
-    return () => window.removeEventListener("scroll", event);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [inView]);
+
+  if (status === "loading" || isLoading) {
+    return <Loader />;
+  }
+
+  if (status === "error" || error) {
+    return <Error error={error} />;
+  }
 
   return (
-    <>
-      <Head>
-        <title>Swanky Feed</title>
-        <meta name="description" content="Swanky Feed" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Feed photos={photos} />
-    </>
+    <Box>
+      {data.pages.length === 0 ? (
+        <Typography>No Images Found...</Typography>
+      ) : (
+        <Box>
+          {data.pages.map(
+            (page) =>
+              page.data.length > 0 && (
+                <Feed photos={page.data} key={page.data[0].id} />
+              )
+          )}
+          <Box ref={ref} pb={8}>
+            {(isFetching || isFetchingNextPage) && <Loader />}
+          </Box>
+        </Box>
+      )}
+    </Box>
   );
-};
-
-export async function getStaticProps() {
-  const data = await fetchImages(1);
-  return {
-    props: { initialPhotos: data },
-  };
 }
 
-export default Home;
+export async function getServerSideProps() {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: ["collection"],
+    queryFn: fetchCollectionImages,
+  });
+
+  return {
+    props: {
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+    },
+  };
+}
