@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useState } from "react";
@@ -11,12 +11,18 @@ function Like({ id, likedByUser, position }) {
     setIsLiked(!isLiked);
   };
   return (
-    <Box
+    <Stack
+      justifyContent="center"
+      alignItems="center"
+      borderRadius={"50%"}
+      width={39}
+      height={39}
+      bgcolor="white"
       onClick={handleLikes}
       component="span"
       sx={{ position: "absolute", cursor: "pointer", ...position }}>
       {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-    </Box>
+    </Stack>
   );
 }
 
