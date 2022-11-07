@@ -8,7 +8,7 @@ export const fetchCollectionImages = async ({ pageParam = 1 }) => {
     const url = `${baseUrl}/collections/${collection}/photos/?client_id=${clientId}&page=${pageParam}&per_page=${perPage}`;
     const response = await fetch(url);
     const data = await response.json();
-    const total_pages = parseInt(res.headers.get("x-total")) / perPage;
+    const total_pages = parseInt(response.headers.get("x-total")) / perPage;
     if (data.length === 0) {
       throw new Error("No Images Found");
     }
