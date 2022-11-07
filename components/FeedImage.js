@@ -19,7 +19,7 @@ const FeedImage = ({ data, width, height }) => {
       <Like
         id={id}
         likedByUser={liked_by_user}
-        position={{ right: 4, bottom: 4 }}
+        position={{ right: 8, bottom: 16 }}
       />
     </Box>
   );

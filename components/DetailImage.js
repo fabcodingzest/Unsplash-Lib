@@ -7,17 +7,8 @@ import Like from "./Like";
 function DetailImage({ data }) {
   const { urls, alt_description, user, id, liked_by_user } = data;
   return (
-    <Stack>
-      <Typography fontSize="small" fontWeight="bold">
-        Author: @{`${user.first_name} ${user.last_name}`}
-      </Typography>
-      <Stack
-        justifyContent="center"
-        sx={{
-          backgroundColor: indigo[200],
-          borderRadius: 5,
-          position: "relative",
-        }}>
+    <Stack p={2} my={2} bgcolor={indigo[200]} borderRadius={2}>
+      <Stack justifyContent="center" bgcolor="black">
         <Image
           src={urls.regular}
           alt={alt_description}
@@ -25,11 +16,12 @@ function DetailImage({ data }) {
           height="500"
           objectFit="contain"
         />
-        <Like
-          id={id}
-          likedByUser={liked_by_user}
-          position={{ right: 12, bottom: 8 }}
-        />
+      </Stack>
+      <Stack direction="row" alignItems="center" position="relative" pt={2}>
+        <Typography fontSize="small" fontWeight="bold">
+          Author: @{`${user.first_name} ${user.last_name}`}
+        </Typography>
+        <Like id={id} likedByUser={liked_by_user} position={{ right: 4 }} />
       </Stack>
     </Stack>
   );
