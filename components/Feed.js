@@ -15,13 +15,13 @@ const FeedItem = ({ data }) => {
 };
 
 const Feed = ({ photos }) => {
-  console.log(photos);
   return (
     <Grid
       container
+      pt={0.8}
       rowSpacing={{ xs: 0, sm: 1 }}
       columnSpacing={{ xs: 0.8, sm: 1.6 }}>
-      {photos[0].map((data) => (
+      {photos.map((data) => (
         <FeedItem key={data.id} data={data} />
       ))}
     </Grid>
