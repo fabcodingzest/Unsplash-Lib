@@ -1,17 +1,11 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Box } from "@mui/system";
+import Like from "./Like";
 
 const FeedImage = ({ data, width, height }) => {
   const { urls, alt_description, id, liked_by_user } = data;
-  const [isLiked, setIsLiked] = useState(liked_by_user);
-  const handleLikes = (e) => {
-    e.stopPropagation();
-    // send request to backend
-    setIsLiked(!isLiked);
-  };
+
   return (
     <Box position="relative" sx={{ cursor: "pointer" }}>
       <Image
@@ -22,12 +16,7 @@ const FeedImage = ({ data, width, height }) => {
         src={urls.small}
         alt={alt_description}
       />
-      <Box
-        onClick={handleLikes}
-        component="span"
-        sx={{ position: "absolute", right: 4, bottom: 4, cursor: "pointer" }}>
-        {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-      </Box>
+      <Like id={id} likedByUser={liked_by_user} />
     </Box>
   );
 };
