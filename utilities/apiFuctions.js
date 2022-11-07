@@ -3,12 +3,19 @@ export const clientId = process.env.NEXT_PUBLIC_UNSPLASH_CLIENT_ID;
 export const collectionId = process.env.NEXT_PUBLIC_UNSPLASH_COLLECTION_ID;
 export const perPage = 15;
 
-export const fetchCollectionImages = async ({ pageParam = 1 }) => {
+export const fetchCollectionImages = async (
+  pageParam = 1,
+  id = collectionId
+) => {
   try {
-    const url = `${baseUrl}/collections/${collectionId}/photos/?client_id=${clientId}&page=${pageParam}&per_page=${perPage}`;
+    console.log(pageParam);
+    const url = `${baseUrl}/collections/${id}/photos/?client_id=${clientId}&page=${pageParam}&per_page=${perPage}`;
     const response = await fetch(url);
     const data = await response.json();
-    const total_pages = parseInt(response.headers.get("x-total")) / perPage;
+    console.log(response);
+    const total_pages = Math.ceil(
+      parseInt(response.headers.get("x-total")) / perPage
+    );
     if (data.length === 0) {
       throw new Error("No Images Found");
     }

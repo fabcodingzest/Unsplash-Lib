@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import {
   useInfiniteQuery,
@@ -26,14 +26,14 @@ export default function Home() {
     hasNextPage,
   } = useInfiniteQuery({
     queryKey: ["collection", collectionId],
-    queryFn: fetchCollectionImages,
+    queryFn: ({ pageParam = 1 }) => fetchCollectionImages(pageParam),
     getNextPageParam: getNextPageNum,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     keepPreviousData: true,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
     }
@@ -68,7 +68,7 @@ export async function getServerSideProps() {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["collection", collectionId],
-    queryFn: fetchCollectionImages,
+    queryFn: ({ pageParam = 1 }) => fetchCollectionImages(pageParam),
   });
 
   return {
