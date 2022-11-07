@@ -50,21 +50,15 @@ export default function Home() {
 
   return (
     <Box>
-      {data.pages.length === 0 ? (
-        <Typography>No Images Found...</Typography>
-      ) : (
-        <Box>
-          {data.pages.map(
-            (page) =>
-              page.data.length > 0 && (
-                <Feed photos={page.data} key={page.data[0].id} />
-              )
-          )}
-          <Box ref={ref} pb={8}>
-            {(isFetching || isFetchingNextPage) && <Loader />}
-          </Box>
-        </Box>
+      {data.pages.map(
+        (page) =>
+          page.data.length > 0 && (
+            <Feed photos={page.data} key={page.data[0].id} />
+          )
       )}
+      <Box ref={ref} pb={8}>
+        {(isFetching || isFetchingNextPage) && <Loader />}
+      </Box>
     </Box>
   );
 }
