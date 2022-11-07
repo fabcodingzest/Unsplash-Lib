@@ -8,9 +8,7 @@ import {
 } from "@tanstack/react-query";
 import Feed from "../components/Feed";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import {
-  fetchCollectionImages,
-} from "../utilities/apiFuctions";
+import { fetchCollectionImages } from "../utilities/apiFuctions";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import { getNextPageNum } from "../utilities/helper";
