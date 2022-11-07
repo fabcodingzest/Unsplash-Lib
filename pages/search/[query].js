@@ -1,12 +1,13 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Feed from "../../components/Feed";
-import { fetchSearchImages, getNextPageNum } from "../../utilities/helpers";
 import Loader from "../../components/Loader";
 import Error from "../../components/Error";
+import { getNextPageNum } from "../../utilities/helper";
+import { fetchSearchImages } from "../../utilities/apiFuctions";
 
 function Search() {
   const { query } = useRouter().query;
