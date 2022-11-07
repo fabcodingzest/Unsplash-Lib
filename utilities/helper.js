@@ -8,7 +8,7 @@ export const getRelatedCollectionData = (imageDetails) => {
   const relatedCollections = imageDetails.related_collections;
   const haveRelatedCollections =
     relatedCollections && relatedCollections.results.length > 0;
-  const firstCollectionId = relatedCollections.results[0].id;
+  const firstCollectionId = relatedCollections.results[0]?.id;
   return haveRelatedCollections
     ? { haveRelatedCollections, firstCollectionId }
     : false;
