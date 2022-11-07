@@ -1,11 +1,14 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import Search from "./Search";
+import { indigo } from "@mui/material/colors";
 
 export default function Layout({ children }) {
   return (
-    <Box m={0}>
-      <Container maxWidth="sm">
+    <Box m={0} bgcolor={indigo[100]} minHeight="100vh">
+      <Container
+        maxWidth="sm"
+        sx={{ backgroundColor: "white", minHeight: "100vh" }}>
         <Stack
           py={{ xs: 2, md: 4 }}
           direction="row"
