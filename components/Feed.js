@@ -21,7 +21,7 @@ const Feed = ({ photos }) => {
       pt={0.8}
       rowSpacing={{ xs: 0, sm: 1 }}
       columnSpacing={{ xs: 0.8, sm: 1.6 }}>
-      {photos.map((data) => (
+      {photos?.map((data) => (
         <FeedItem key={data.id} data={data} />
       ))}
     </Grid>
