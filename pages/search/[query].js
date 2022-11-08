@@ -8,11 +8,10 @@ import Loader from "../../components/Loader";
 import Error from "../../components/Error";
 import { getNextPageNum } from "../../utilities/helper";
 import { fetchSearchImages } from "../../utilities/apiFuctions";
+import useScroll from "../../hooks/useScroll";
 
 function Search() {
   const { query } = useRouter().query;
-
-  const { ref, inView } = useInView();
 
   const {
     status,
@@ -30,12 +29,7 @@ function Search() {
     refetchOnWindowFocus: false,
   });
 
-  React.useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView]);
+  const ref = useScroll(fetchNextPage, hasNextPage);
 
   if (status === "loading" || isLoading) {
     return <Loader />;

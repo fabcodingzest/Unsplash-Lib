@@ -11,10 +11,9 @@ import { collectionId, fetchCollectionImages } from "../utilities/apiFuctions";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import { getNextPageNum } from "../utilities/helper";
+import useScroll from "../hooks/useScroll";
 
 export default function Home() {
-  const { ref, inView } = useInView();
-
   const {
     data,
     status,
@@ -32,14 +31,7 @@ export default function Home() {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
   });
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView]);
-
+  const ref = useScroll(fetchNextPage, hasNextPage);
   if (status === "loading" || isLoading) {
     return <Loader />;
   }
