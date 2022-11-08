@@ -1,14 +1,13 @@
-import api, { perPage } from "./api";
+import api, { collectionId } from "./api";
+const perPage = 15;
 
 export const fetchCollectionImages = async (
   pageParam = 1,
   id = collectionId
 ) => {
   try {
-    console.log(pageParam);
-    const url = `/collections/${id}/photos`;
-    const { data, headers } = await api.get(url, {
-      params: { page: pageParam },
+    const { data, headers } = await api.get(`/collections/${id}/photos`, {
+      params: { page: pageParam, per_page: perPage },
     });
     const total_pages = Math.ceil(parseInt(headers["x-total"]) / perPage);
     if (data.length === 0) {
@@ -23,11 +22,11 @@ export const fetchCollectionImages = async (
 
 export const fetchSearchImages = async (pageParam, query) => {
   try {
-    const url = `/search/photos`;
-    const { data } = await api.get(url, {
+    const { data } = await api.get(`/search/photos`, {
       params: {
         query,
         page: pageParam,
+        per_page: perPage,
       },
     });
 
@@ -48,6 +47,24 @@ export const fetchImageDetails = async (id) => {
       const { data } = await api.get(url);
       return data;
     }
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
+export const likeImg = async (id) => {
+  try {
+    return await api.post(`/photos/${id}/like`);
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
+export const unlikeImg = async (id) => {
+  try {
+    return await api.delete(`/photos/${id}/like`);
   } catch (error) {
     console.log(error);
     throw new Error(error);
