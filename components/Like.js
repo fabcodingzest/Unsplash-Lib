@@ -27,15 +27,15 @@ function Like({ id, likedByUser, position }) {
     },
     onSettled: () => {
       pathname === "/search/[query]" &&
-        queryClient.refetchQueries({
+        queryClient.invalidateQueries({
           queryKey: ["search", router.query.query],
         });
       pathname === "/detail/[id]" &&
-        queryClient.refetchQueries({
+        queryClient.invalidateQueries({
           queryKey: ["detail", router.query.id],
         });
       pathname === "/" &&
-        queryClient.refetchQueries({
+        queryClient.invalidateQueries({
           queryKey: ["collection", collectionId],
         });
     },
