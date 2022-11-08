@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { Box, Container } from "@mui/material";
 import {
@@ -18,10 +18,9 @@ import {
   getNextPageNum,
   getRelatedCollectionData,
 } from "../../utilities/helper";
-import { useInView } from "react-intersection-observer";
+import useScroll from "../../hooks/useScroll";
 
 const Detail = () => {
-  const { ref, inView } = useInView();
   const { id } = useRouter().query;
   const {
     data: detailData,
@@ -33,13 +32,6 @@ const Detail = () => {
     queryFn: () => fetchImageDetails(id),
     refetchOnWindowFocus: false,
   });
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView]);
 
   const { haveRelatedCollections, firstCollectionId } =
     getRelatedCollectionData(detailData);
@@ -62,12 +54,12 @@ const Detail = () => {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
   });
-  console.log(collectionData);
-  console.log(detailIsLoading || collectionIsLoading);
+
+  const ref = useScroll(fetchNextPage, hasNextPage);
+
   if (detailIsLoading) {
     return <Loader />;
   }
-
   if (collectionError || detailError) {
     return <Error error={detailError || collectionError} />;
   }
@@ -87,7 +79,9 @@ const Detail = () => {
           });
       })}
       <Box ref={ref} pb={8}>
-        {(isFetching || isFetchingNextPage) && <Loader />}
+        {(collectionIsLoading || isFetching || isFetchingNextPage) && (
+          <Loader />
+        )}
       </Box>
     </Container>
   );
@@ -104,19 +98,23 @@ export async function getStaticProps(context) {
   const id = context.params?.id;
   const queryClient = new QueryClient();
 
-  const imageDetails = await queryClient.fetchQuery({
-    queryKey: ["detail", id],
-    queryFn: () => fetchImageDetails(id),
-  });
-  const { haveRelatedCollections, firstCollectionId } =
-    getRelatedCollectionData(imageDetails);
-
-  if (haveRelatedCollections) {
-    await queryClient.prefetchInfiniteQuery({
-      queryKey: ["collection", firstCollectionId],
-      queryFn: ({ pageParam }) =>
-        fetchCollectionImages(pageParam, firstCollectionId),
+  try {
+    const imageDetails = await queryClient.fetchQuery({
+      queryKey: ["detail", id],
+      queryFn: () => fetchImageDetails(id),
     });
+    const { haveRelatedCollections, firstCollectionId } =
+      getRelatedCollectionData(imageDetails);
+
+    if (haveRelatedCollections) {
+      await queryClient.prefetchInfiniteQuery({
+        queryKey: ["collection", firstCollectionId],
+        queryFn: ({ pageParam }) =>
+          fetchCollectionImages(pageParam, firstCollectionId),
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
 
   return {
