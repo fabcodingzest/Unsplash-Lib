@@ -19,7 +19,9 @@ export default function Layout({ children }) {
               level="display2"
               component="h1"
               fontWeight="bold"
-              sx={{ fontSize: { xs: "1.2rem", sm: "2rem" } }}>
+              sx={{
+                fontSize: { xs: "1.2rem", sm: "2rem", cursor: "pointer" },
+              }}>
               Swanky
             </Typography>
           </Link>
