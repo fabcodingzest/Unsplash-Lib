@@ -15,7 +15,6 @@ function Like({ id, likedByUser, position }) {
   const [isLiked, setIsLiked] = useState(likedByUser);
   const { error, mutate } = useMutation({
     mutationFn: (id) => {
-      console.log(id);
       !isLiked ? likeImg(id) : unlikeImg(id);
     },
     onMutate: async () => {

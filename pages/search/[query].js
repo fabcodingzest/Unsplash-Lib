@@ -42,7 +42,6 @@ function Search() {
   return (
     <Box>
       {data.pages.map((page) => {
-        console.log(page);
         return <Feed photos={page?.data} key={page?.data?.id} />;
       })}
       <Box ref={ref} pb={8}>
