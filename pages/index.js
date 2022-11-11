@@ -7,11 +7,12 @@ import {
 } from "@tanstack/react-query";
 import Feed from "../components/Feed";
 import { Box } from "@mui/material";
-import { collectionId, fetchCollectionImages } from "../utilities/apiFuctions";
+import { fetchCollectionImages } from "../utilities/apiFuctions";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import { getNextPageNum } from "../utilities/helper";
 import useScroll from "../hooks/useScroll";
+import { collectionId } from "../utilities/api";
 
 export default function Home() {
   const {
@@ -58,6 +59,7 @@ export default function Home() {
 export async function getServerSideProps() {
   const queryClient = new QueryClient();
 
+  // this affects the performance a bit
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["collection", collectionId],
     queryFn: ({ pageParam = 1 }) => fetchCollectionImages(pageParam),
