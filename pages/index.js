@@ -46,7 +46,7 @@ export default function Home() {
       {data.pages.map(
         (page) =>
           page.data.length > 0 && (
-            <Feed photos={page.data} key={page.data[0].id} />
+            <Feed photos={page.data} collectionId={collectionId} key={page.data[0].id} />
           )
       )}
       <Box ref={ref} pb={8}>

@@ -66,7 +66,7 @@ const Detail = () => {
 
   return (
     <Container maxWidth="sm" sx={{ minHeight: "100vh" }}>
-      <DetailImage data={detailData} />
+      <DetailImage data={detailData} type="detail" />
       {collectionData.pages.map((page) => {
         return page.data
           .filter((img) => {
@@ -75,7 +75,14 @@ const Detail = () => {
             return !sameCollection;
           })
           .map((img) => {
-            return <DetailImage data={img} key={img.id} />;
+            return (
+              <DetailImage
+                data={img}
+                key={img.id}
+                type="collection"
+                collectionId={firstCollectionId}
+              />
+            );
           });
       })}
       <Box ref={ref} pb={8}>

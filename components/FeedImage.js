@@ -4,7 +4,8 @@ import { Box } from "@mui/system";
 import Like from "./Like";
 
 const FeedImage = ({ data, width, height }) => {
-  const { urls, alt_description, id, liked_by_user, blur_hash } = data;
+  const { urls, alt_description, id, liked_by_user, blur_hash, collectionId } =
+    data;
 
   return (
     <Box position="relative" sx={{ cursor: "pointer" }}>
@@ -23,6 +24,8 @@ const FeedImage = ({ data, width, height }) => {
         id={id}
         likedByUser={liked_by_user}
         position={{ right: 8, bottom: 16 }}
+        type="collection"
+        collectionId={collectionId}
       />
     </Box>
   );

@@ -4,17 +4,16 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { likeImg, unlikeImg } from "../utilities/apiFuctions";
-import { collectionId } from "../utilities/api";
 import { useRouter } from "next/router";
 
-function Like({ id, likedByUser, position }) {
+function Like({ id, likedByUser, position, type, collectionId }) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = router.pathname;
 
   const [isLiked, setIsLiked] = useState(likedByUser);
   const { error, mutate } = useMutation({
-    mutationFn: (id) => {
+    mutationFn: (id, collectionId) => {
       !isLiked ? likeImg(id) : unlikeImg(id);
     },
     onMutate: async () => {
@@ -25,17 +24,19 @@ function Like({ id, likedByUser, position }) {
       setIsLiked(!isLiked);
       return error;
     },
-    onSettled: () => {
-      pathname === "/search/[query]" &&
+    onSettled: (data) => {
+      console.log(data);
+      console.log(collectionId);
+      type === "search" &&
         queryClient.invalidateQueries({
           queryKey: ["search", router.query.query],
         });
-      pathname === "/detail/[id]" &&
+      type === "detail" &&
         queryClient.invalidateQueries({
           queryKey: ["detail", router.query.id],
         });
-      pathname === "/" &&
-        queryClient.invalidateQueries({
+      type === "collection" &&
+        queryClient.refetchQueries({
           queryKey: ["collection", collectionId],
         });
     },
@@ -57,7 +58,7 @@ function Like({ id, likedByUser, position }) {
       onClick={handleLikes}
       component="span"
       sx={{ position: "absolute", cursor: "pointer", ...position }}>
-      {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+      {likedByUser ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       {error && (
         <Snackbar open={error} autoHideDuration={6000}>
           <Alert severity="success" sx={{ width: "100%" }}>

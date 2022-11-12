@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import Like from "./Like";
 
-function DetailImage({ data }) {
+function DetailImage({ data, type }) {
   const { urls, alt_description, user, id, liked_by_user } = data;
   return (
     <Stack p={2} my={2} bgcolor={indigo[200]} borderRadius={2}>
@@ -21,7 +21,12 @@ function DetailImage({ data }) {
         <Typography fontSize="small" fontWeight="bold">
           Author: @{`${user.first_name} ${user.last_name}`}
         </Typography>
-        <Like id={id} likedByUser={liked_by_user} position={{ right: 4 }} />
+        <Like
+          id={id}
+          likedByUser={liked_by_user}
+          position={{ right: 4 }}
+          type={type}
+        />
       </Stack>
     </Stack>
   );
