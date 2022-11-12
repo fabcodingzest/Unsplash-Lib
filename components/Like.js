@@ -22,7 +22,7 @@ function Like({ id, likedByUser, position, type, collectionId }) {
     },
     onError: (error) => {
       setIsLiked(!isLiked);
-      return error;
+      console.log(error);
     },
     onSettled: (data) => {
       console.log(data);
@@ -44,7 +44,7 @@ function Like({ id, likedByUser, position, type, collectionId }) {
   const handleLikes = (e) => {
     e.stopPropagation();
     // send request to backend
-    mutate(id, collectionId);
+    mutate(id);
   };
 
   return (
@@ -58,7 +58,7 @@ function Like({ id, likedByUser, position, type, collectionId }) {
       onClick={handleLikes}
       component="span"
       sx={{ position: "absolute", cursor: "pointer", ...position }}>
-      {likedByUser ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+      {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       {error && (
         <Snackbar open={error} autoHideDuration={6000}>
           <Alert severity="success" sx={{ width: "100%" }}>

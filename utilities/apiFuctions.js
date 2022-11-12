@@ -54,19 +54,9 @@ export const fetchImageDetails = async (id) => {
 };
 
 export const likeImg = async (id) => {
-  try {
-    return await api.post(`/photos/${id}/like`);
-  } catch (error) {
-    console.log(error);
-    throw new Error(error);
-  }
+  return await api.post(`/photos/${id}/like`);
 };
 
 export const unlikeImg = async (id) => {
-  try {
-    return await api.delete(`/photos/${id}/like`);
-  } catch (error) {
-    console.log(error);
-    throw new Error(error);
-  }
+  return await api.delete(`/photos/${id}/like`);
 };
